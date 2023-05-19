@@ -10,7 +10,7 @@ export const Container = styled('div', {
 })
 
 export const Hero = styled('div', {
-  maxWidth: 480,
+  maxWidth: 500,
   padding: '0 $10',
 
   '@media(max-width: 600px)': {
