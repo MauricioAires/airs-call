@@ -5,7 +5,6 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import * as S from './styles'
-import { error } from 'console'
 
 const claimUserFormSchema = z.object({
   username: z
