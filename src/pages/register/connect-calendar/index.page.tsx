@@ -1,10 +1,13 @@
 import { Button, Heading, MultiStep, Text } from '@airs-ui/react'
 import { ArrowRight } from 'phosphor-react'
+import { signIn, useSession } from 'next-auth/react'
 
 import * as SCommon from '../styles'
 import * as S from './styles'
 
 export default function Register() {
+  const session = useSession()
+
   return (
     <SCommon.Container>
       <SCommon.Header>
@@ -19,7 +22,11 @@ export default function Register() {
       <S.ConnectBox>
         <S.ConnectItem>
           <Text>Google Calendar</Text>
-          <Button variant="secondary" size="sm">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => signIn('google')}
+          >
             Conectar <ArrowRight weight="bold" />
           </Button>
         </S.ConnectItem>
