@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { setCookie } from 'nookies'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handle(
@@ -29,6 +30,18 @@ export default async function handle(
       username,
     },
   })
+
+  setCookie(
+    {
+      res,
+    },
+    '@airscall:userId',
+    user.id,
+    {
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    },
+  )
 
   return res.status(201).json(user)
 }
