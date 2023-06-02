@@ -18,6 +18,8 @@ import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api'
 
 import * as SCommon from '../styles'
 import * as S from './styles'
+import { api } from '@/lib/axios'
+import { useRouter } from 'next/router'
 
 const updateProfileFormSchema = z.object({
   bio: z.string(),
@@ -35,12 +37,15 @@ export default function UpdateProfile() {
   })
 
   const session = useSession()
-
-  console.log({ session })
+  const router = useRouter()
 
   async function handleUpdateProfile(data: updateProfileFormData) {
     try {
-      console.log(data)
+      await api.put('/users/profile', {
+        bio: data.bio,
+      })
+
+      await router.push(`/schedule/${session.data?.user.username}`)
     } catch (err) {
       if (err instanceof AxiosError && err.response?.data.message) {
         return alert(err.response?.data?.message)
@@ -53,11 +58,8 @@ export default function UpdateProfile() {
   return (
     <SCommon.Container>
       <SCommon.Header>
-        <Heading as="strong">Bem-vindo ao Airs Call!</Heading>
-        <Text>
-          Precisamos de algumas informações para criar seu perfil! Ah, você pode
-          editar essas informações depois.
-        </Text>
+        <Heading as="strong">Para finalizar!</Heading>
+        <Text>Adicione uma breve descrição e uma foto de perfil.</Text>
         <MultiStep size={4} currentStep={4} />
       </SCommon.Header>
 
