@@ -3,12 +3,12 @@ import { ArrowRight } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-
-import * as S from './styles'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { api } from '@/lib/axios'
 import { AxiosError } from 'axios'
+
+import * as S from './styles'
 
 const registerFormSchema = z.object({
   username: z
@@ -36,7 +36,7 @@ export default function Register() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      username: 'mau',
+      username: '',
       name: '',
     },
   })
