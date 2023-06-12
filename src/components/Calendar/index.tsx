@@ -1,23 +1,47 @@
+import { useState } from 'react'
 import { CaretLeft, CaretRight } from 'phosphor-react'
-
-import * as S from './styles'
 import { getWeekDays } from '@/utils/get-week-days'
 import { Tooltip } from '@airs-ui/react'
+import dayjs from 'dayjs'
+
+import * as S from './styles'
 
 export function Calendar() {
+  const [currentDate, setCurrentDate] = useState(() => {
+    return dayjs().set('date', 1)
+  })
+
+  function handlePreviousMonth() {
+    const previousMonth = currentDate.subtract(1, 'month')
+
+    setCurrentDate(previousMonth)
+  }
+  function handleNextMonth() {
+    const nextMonth = currentDate.add(1, 'month')
+
+    setCurrentDate(nextMonth)
+  }
+
+  const currentMonth = currentDate.format('MMMM')
+  const currentYear = currentDate.format('YYYY')
+
   const shortWeekDays = getWeekDays({ short: true })
 
   return (
     <S.CalendarContainer>
       <S.CalendarHeader>
         <S.CalendarTitle>
-          Janeiro <span>2023</span>
+          {currentMonth} <span>{currentYear}</span>
         </S.CalendarTitle>
         <S.CalendarActions>
-          <button>
+          <button
+            type="button"
+            onClick={handlePreviousMonth}
+            title="Previous month"
+          >
             <CaretLeft />
           </button>
-          <button>
+          <button type="button" onClick={handleNextMonth} title="Next month">
             <CaretRight />
           </button>
         </S.CalendarActions>
