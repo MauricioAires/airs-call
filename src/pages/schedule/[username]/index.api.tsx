@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { Avatar, Heading, Text } from '@airs-ui/react'
 import { prisma } from '@/lib/prisma'
+import { ScheduleForm } from './ScheduleForm'
 
 import * as S from './styles'
 
@@ -20,6 +21,7 @@ export default function Schedule({ user }: ScheduleProps) {
         <Heading>{user.name}</Heading>
         <Text>{user.bio}</Text>
       </S.UserHeader>
+      <ScheduleForm />
     </S.Container>
   )
 }
