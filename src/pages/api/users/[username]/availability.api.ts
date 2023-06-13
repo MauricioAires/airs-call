@@ -37,6 +37,7 @@ export default async function handle(
   if (isPastDate) {
     return res.status(200).json({
       availability: [],
+      possibleTimes: [],
     })
   }
 
@@ -50,6 +51,7 @@ export default async function handle(
   if (!userAvailability) {
     return res.status(200).json({
       availability: [],
+      possibleTimes: [],
     })
   }
 
@@ -93,6 +95,7 @@ export default async function handle(
   })
 
   return res.send({
-    availability: availableTimes,
+    availableTimes,
+    possibleTimes,
   })
 }
