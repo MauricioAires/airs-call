@@ -1,10 +1,19 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CaretLeft, CaretRight } from 'phosphor-react'
 import { getWeekDays } from '@/utils/get-week-days'
-import { Tooltip } from '@airs-ui/react'
 import dayjs from 'dayjs'
 
 import * as S from './styles'
+
+interface CalendarWeek {
+  week: number
+  days: Array<{
+    date: dayjs.Dayjs
+    disabled: boolean
+  }>
+}
+
+type CalendarWeeks = CalendarWeek[]
 
 export function Calendar() {
   const [currentDate, setCurrentDate] = useState(() => {
@@ -26,6 +35,75 @@ export function Calendar() {
   const currentYear = currentDate.format('YYYY')
 
   const shortWeekDays = getWeekDays({ short: true })
+
+  const calendarWeeks = useMemo(() => {
+    const daysInMonthArray = Array.from({
+      length: currentDate.daysInMonth(),
+    }).map((_, index) => {
+      return currentDate.set('date', index + 1)
+    })
+
+    const firstWeekDay = currentDate.get('day')
+    const lastDayInCurrentMonth = currentDate.set(
+      'date',
+      currentDate.daysInMonth(),
+    )
+
+    const lastWeekDay = lastDayInCurrentMonth.get('day')
+
+    const previousMonthFillArray = Array.from({
+      length: firstWeekDay,
+    })
+      .map((_, index) => {
+        return currentDate.subtract(index + 1, 'day')
+      })
+      .reverse()
+
+    const nextMonthFillArray = Array.from({
+      length: 7 - (lastWeekDay + 1),
+    }).map((_, index) => {
+      return lastDayInCurrentMonth.add(index + 1, 'day')
+    })
+
+    const calendarDays = [
+      ...previousMonthFillArray.map((date) => {
+        return {
+          date,
+          disabled: true,
+        }
+      }),
+      ...daysInMonthArray.map((date) => {
+        return {
+          date,
+          disabled: false,
+        }
+      }),
+      ...nextMonthFillArray.map((date) => {
+        return {
+          date,
+          disabled: true,
+        }
+      }),
+    ]
+
+    const weeks = calendarDays.reduce<CalendarWeeks>(
+      (weeks, _, i, original) => {
+        const isNewWeek = i % 7 === 0
+
+        if (isNewWeek) {
+          weeks.push({
+            week: i / 7 + 1,
+            days: original.slice(i, i + 7),
+          })
+        }
+
+        return weeks
+      },
+      [],
+    )
+
+    return weeks
+  }, [currentDate])
 
   return (
     <S.CalendarContainer>
@@ -56,122 +134,17 @@ export function Calendar() {
         </thead>
 
         <tbody>
-          <tr>
-            <td>
-              <Tooltip
-                content="Segunda dia 01"
-                open={false}
-                defaultOpen={false}
-              >
-                <S.CalendarDay disabled>1</S.CalendarDay>
-              </Tooltip>
-            </td>
-            <td>
-              <S.CalendarDay>2</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>3</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>4</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>5</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>6</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>7</S.CalendarDay>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <Tooltip
-                content="Segunda dia 01"
-                open={false}
-                defaultOpen={false}
-              >
-                <S.CalendarDay disabled>1</S.CalendarDay>
-              </Tooltip>
-            </td>
-            <td>
-              <S.CalendarDay>2</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>3</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>4</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>5</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>6</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>7</S.CalendarDay>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <Tooltip
-                content="Segunda dia 01"
-                open={false}
-                defaultOpen={false}
-              >
-                <S.CalendarDay disabled>1</S.CalendarDay>
-              </Tooltip>
-            </td>
-            <td>
-              <S.CalendarDay>2</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>3</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>4</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>5</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>6</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>7</S.CalendarDay>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <Tooltip
-                content="Segunda dia 01"
-                open={false}
-                defaultOpen={false}
-              >
-                <S.CalendarDay disabled>1</S.CalendarDay>
-              </Tooltip>
-            </td>
-            <td>
-              <S.CalendarDay>2</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>3</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>4</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>5</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>6</S.CalendarDay>
-            </td>
-            <td>
-              <S.CalendarDay>7</S.CalendarDay>
-            </td>
-          </tr>
+          {calendarWeeks.map(({ days, week }) => (
+            <tr key={week}>
+              {days.map(({ date, disabled }) => (
+                <td key={date.toString()}>
+                  <S.CalendarDay disabled={disabled}>
+                    {date.get('date')}
+                  </S.CalendarDay>
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </S.CalendarBody>
     </S.CalendarContainer>
