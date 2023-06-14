@@ -65,6 +65,11 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
   const shortWeekDays = getWeekDays({ short: true })
 
   const calendarWeeks = useMemo(() => {
+    // Caso a api de datas bloqueadas ainda nãó tenha sido carrega mostrar o
+    // calendário em branco para não mostrar um falso positivo
+    if (!blockedDates) {
+      return []
+    }
     const daysInMonthArray = Array.from({
       length: currentDate.daysInMonth(),
     }).map((_, index) => {
@@ -105,7 +110,7 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
           date,
           disabled:
             date.endOf('day').isBefore(new Date()) ||
-            !!blockedDates?.blockedWeekDays.includes(date.get('day')),
+            blockedDates.blockedWeekDays.includes(date.get('day')),
         }
       }),
       ...nextMonthFillArray.map((date) => {
