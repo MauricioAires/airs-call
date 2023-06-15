@@ -2,9 +2,15 @@ import { Button, Text, TextArea, TextInput } from '@airs-ui/react'
 import { CalendarBlank, Clock } from 'phosphor-react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import dayjs from 'dayjs'
 
 import * as S from './styles'
-import { zodResolver } from '@hookform/resolvers/zod'
+
+interface ConfirmStepProps {
+  schedulingDate: Date
+  onCancelConfirmation: () => void
+}
 
 const confirmFormSchema = z.object({
   name: z.string().min(3, {
@@ -18,7 +24,10 @@ const confirmFormSchema = z.object({
 
 type ConfirmFormData = z.infer<typeof confirmFormSchema>
 
-export function ConfirmStep() {
+export function ConfirmStep({
+  schedulingDate,
+  onCancelConfirmation,
+}: ConfirmStepProps) {
   const {
     register,
     handleSubmit,
@@ -28,14 +37,18 @@ export function ConfirmStep() {
   })
 
   const handleConfirmScheduling = () => {}
+
+  const describeDate = dayjs(schedulingDate).format('DD[ de ]MMMM[ de ]YYYY')
+  const describeTime = dayjs(schedulingDate).format('HH:mm[h]')
+
   return (
     <S.ConfirmForm as="form" onSubmit={handleSubmit(handleConfirmScheduling)}>
       <S.FormHeader>
         <Text>
-          <CalendarBlank size={22} /> 22 de Setembro de 2024
+          <CalendarBlank size={22} /> {describeDate}
         </Text>
         <Text>
-          <Clock size={22} /> 18:00h
+          <Clock size={22} /> {describeTime}
         </Text>
       </S.FormHeader>
 
@@ -60,7 +73,11 @@ export function ConfirmStep() {
       </label>
 
       <S.FormActions>
-        <Button type="button" variant="tertiary">
+        <Button
+          type="button"
+          onClick={() => onCancelConfirmation()}
+          variant="tertiary"
+        >
           Cancelar
         </Button>
         <Button disabled={isSubmitting} type="submit">
