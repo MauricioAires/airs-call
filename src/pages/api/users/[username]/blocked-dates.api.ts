@@ -46,6 +46,8 @@ export default async function handle(
     )
   })
 
+  const yearMonth = `${year}-${String(month).padStart(2, '0')}`
+
   const blockedDateRaw: Array<{ date: number }> = await prisma.$queryRaw`
   SELECT x.date FROM (
     SELECT
@@ -58,7 +60,7 @@ export default async function handle(
     ON uti.week_day = WEEKDAY(DATE_ADD(s.date, INTERVAL 1 DAY))
 
     WHERE s.user_id = ${user.id}
-        AND DATE_FORMAT(s.date, "%Y-%m") = ${`${year}-${month}`}
+        AND DATE_FORMAT(s.date, "%Y-%m") = ${yearMonth}
 
     GROUP BY EXTRACT(DAY FROM s.date), size
 
