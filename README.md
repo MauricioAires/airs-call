@@ -34,6 +34,26 @@ Para rodar a aplicação em modo de desenvolvimento, utilize o seguinte comando:
 ```bash
   $ npm run dev
 ```
+
+Comando utilizado para rodar o Docker
+
+```bash
+  $ docker run --name mysql -e MYSQL_ROOT_PASSWORD=docker -p 3306:3306 mysql:latest
+```
+
+Comando utilizado para iniciar o container
+
+```bash
+  $ docker start mysql
+```
+
+
+Comando utilizado para parar o container
+
+```bash
+  $ docker stop mysql
+```
+
 ### 🤝 Contribuição
 
 Contribuições são bem-vindas! Para contribuir, basta abrir uma issue ou pull request neste repositório.
