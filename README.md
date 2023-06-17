@@ -53,6 +53,11 @@ Comando utilizado para parar o container
 ```bash
   $ docker stop mysql
 ```
+Sincronizar o schema do Prisma executando todas as migrations
+
+```bash
+  $  npx prisma db push
+```
 
 ### 🤝 Contribuição
 
