@@ -15,11 +15,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { AxiosError } from 'axios'
 import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api'
+import { api } from '@/lib/axios'
+import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 
 import * as SCommon from '../styles'
 import * as S from './styles'
-import { api } from '@/lib/axios'
-import { useRouter } from 'next/router'
 
 const updateProfileFormSchema = z.object({
   bio: z.string(),
@@ -56,35 +57,38 @@ export default function UpdateProfile() {
   }
 
   return (
-    <SCommon.Container>
-      <SCommon.Header>
-        <Heading as="strong">Para finalizar!</Heading>
-        <Text>Adicione uma breve descrição e uma foto de perfil.</Text>
-        <MultiStep size={4} currentStep={4} />
-      </SCommon.Header>
+    <>
+      <NextSeo title="Atualize seu perfil | Airs Call" noindex />
+      <SCommon.Container>
+        <SCommon.Header>
+          <Heading as="strong">Para finalizar!</Heading>
+          <Text>Adicione uma breve descrição e uma foto de perfil.</Text>
+          <MultiStep size={4} currentStep={4} />
+        </SCommon.Header>
 
-      <S.ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
-        <label>
-          <Text size="sm">Foto de perfil</Text>
-          <Avatar
-            src={session.data?.user.avatar_url}
-            referrerPolicy="no-referrer"
-            alt={session.data?.user.name}
-          />
-        </label>
-        <label>
-          <Text size="sm">Sobre você</Text>
-          <TextArea autoComplete="off" {...register('bio')} />
-          <S.FormAnnotation size="sm">
-            Fale um pouco sobre você. Isto será exibido em sua página pessoal.
-          </S.FormAnnotation>
-        </label>
+        <S.ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
+          <label>
+            <Text size="sm">Foto de perfil</Text>
+            <Avatar
+              src={session.data?.user.avatar_url}
+              referrerPolicy="no-referrer"
+              alt={session.data?.user.name}
+            />
+          </label>
+          <label>
+            <Text size="sm">Sobre você</Text>
+            <TextArea autoComplete="off" {...register('bio')} />
+            <S.FormAnnotation size="sm">
+              Fale um pouco sobre você. Isto será exibido em sua página pessoal.
+            </S.FormAnnotation>
+          </label>
 
-        <Button type="submit" disabled={isSubmitting}>
-          Finalizar <ArrowRight weight="bold" />
-        </Button>
-      </S.ProfileBox>
-    </SCommon.Container>
+          <Button type="submit" disabled={isSubmitting}>
+            Finalizar <ArrowRight weight="bold" />
+          </Button>
+        </S.ProfileBox>
+      </SCommon.Container>
+    </>
   )
 }
 

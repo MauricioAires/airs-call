@@ -2,6 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { Avatar, Heading, Text } from '@airs-ui/react'
 import { prisma } from '@/lib/prisma'
 import { ScheduleForm } from './ScheduleForm'
+import { NextSeo } from 'next-seo'
 
 import * as S from './styles'
 
@@ -15,14 +16,18 @@ interface ScheduleProps {
 
 export default function Schedule({ user }: ScheduleProps) {
   return (
-    <S.Container>
-      <S.UserHeader>
-        <Avatar src={user.avatarUrl} alt={user.name} />
-        <Heading>{user.name}</Heading>
-        <Text>{user.bio}</Text>
-      </S.UserHeader>
-      <ScheduleForm />
-    </S.Container>
+    <>
+      <NextSeo title={`Agendar com ${user.name} | Airs Call`} />
+
+      <S.Container>
+        <S.UserHeader>
+          <Avatar src={user.avatarUrl} alt={user.name} />
+          <Heading>{user.name}</Heading>
+          <Text>{user.bio}</Text>
+        </S.UserHeader>
+        <ScheduleForm />
+      </S.Container>
+    </>
   )
 }
 
