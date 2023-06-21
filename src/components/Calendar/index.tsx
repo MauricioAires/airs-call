@@ -99,8 +99,6 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
       return lastDayInCurrentMonth.add(index + 1, 'day')
     })
 
-    console.log(blockedDates)
-
     const calendarDays = [
       ...previousMonthFillArray.map((date) => {
         return {

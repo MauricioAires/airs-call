@@ -74,32 +74,51 @@ export default async function handle(
 
   // GTE = GREATER THAN OR EQUAL => maior ou igual
   // LTE  LESS THAN OR EQUAL => MENOR OU IGUAL
+  // const blockedTimes = await prisma.scheduling.findMany({
+  //   retornar apenas a data
+  //   select: {
+  //     date: true,
+  //   },
+  //   where: {
+  //     user_id: user.id,
+  //     date: {
+  //       gte: referenceDate.set('hour', startHour).toDate(),
+  //       lte: referenceDate.set('hour', endHour).toDate(),
+  //     },
+  //   },
+  // })
+
+  // const availableTimes = possibleTimes.filter((time) => {
+  //   const isTimeBlocked = blockedTimes.some(
+  //     (blockedTime) => blockedTime.date.getHours() === time,
+  //   )
+
+  //   const isTimeInPast = referenceDate.set('hour', time).isBefore(new Date())
+
+  //   return !isTimeBlocked && !isTimeInPast
+  // })
+
+  // return res.send({
+  //   availableTimes,
+  //   possibleTimes,
+  // })
+
   const blockedTimes = await prisma.scheduling.findMany({
-    // retornar apenas a data
     select: {
       date: true,
     },
     where: {
       user_id: user.id,
       date: {
-        gte: referenceDate.set('hour', startHour).toDate(),
-        lte: referenceDate.set('hour', endHour).toDate(),
+        gte: referenceDate.startOf('day').toDate(),
+        lte: referenceDate.endOf('day').toDate(),
       },
     },
   })
 
-  const availableTimes = possibleTimes.filter((time) => {
-    const isTimeBlocked = blockedTimes.some(
-      (blockedTime) => blockedTime.date.getHours() === time,
-    )
-
-    const isTimeInPast = referenceDate.set('hour', time).isBefore(new Date())
-
-    return !isTimeBlocked && !isTimeInPast
+  const availableTimes = blockedTimes.map((schedules) => {
+    return schedules.date
   })
 
-  return res.send({
-    availableTimes,
-    possibleTimes,
-  })
+  return res.json({ possibleTimes, availableTimes })
 }
