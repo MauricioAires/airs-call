@@ -31,6 +31,8 @@ Com o Ignite Call, agendar compromissos nunca foi tão fácil e integrado. Exper
 - [ESLint](https://eslint.org/)
 - [date-fns](https://date-fns.org/)
 - [Zod](https://github.com/colinhacks/zod)
+- [Planetscale](https://planetscale.com/)
+  - Debloy do banco de dados MySQL
 
 
 ### 🔧 Instalação
